@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profiles</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      .profile {
+        padding: 15px;
+        background-color: #f9f9f9;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .profile h3 {
+        margin: 0 0 5px;
+        color: #333;
+      }
+
+      .profile p {
+        margin: 0;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useState, useMemo } = React;
+
+      // UserProfile Component
+      function UserProfile({ name, email }) {
+        return (
+          <div className="profile">
+            <h3>{name}</h3>
+            <p>{email}</p>
+          </div>
+        );
+      }
+
+      // Main App Component
+      function App() {
+        const [searchTerm, setSearchTerm] = useState('');
+
+        // List of user profiles
+        const users = [
+          { id: 1, name: 'John Doe', email: 'john@example.com' },
+          { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
+          { id: 3, name: 'Chris Johnson', email: 'chris@example.com' },
+          { id: 4, name: 'Amanda Williams', email: 'amanda@example.com' },
+        ];
+
+        // Filtered list based on search term using useMemo to optimize performance
+        const filteredUsers = useMemo(() => {
+          return users.filter(user =>
+            user.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }, [searchTerm, users]);
+
+        return (
+          <div className="container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map(user => (
+                <UserProfile key={user.id} name={user.name} email={user.email} />
+              ))
+            ) : (
+              <p>No profiles found</p>
+            )}
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
